@@ -22,10 +22,10 @@
 
 
 BLEPeripheral blePeripheral;  // BLE Peripheral Device (the board you're programming)
-BLEService ledService("19B10000-E8F2-537E-4F6C-D104768A1214"); // BLE LED Service
+BLEService ledService("19B10000-E8F2-537E-4F6C-D104768A8A8A"); // BLE LED Service
 
 // BLE LED Switch Characteristic - custom 128-bit UUID, read and writable by central
-BLEUnsignedCharCharacteristic switchCharacteristic("19B10001-E8F2-537E-4F6C-D104768A1214", BLERead | BLEWrite);
+BLEUnsignedCharCharacteristic switchCharacteristic("19B10001-E8F2-537E-4F6C-D104768A8A8A", BLERead | BLEWrite);
 Servo myservo;  // create servo object to control a servo
                 // twelve servo objects can be created on most boards
 
@@ -41,7 +41,7 @@ void setup() {
   pinMode(ledPin, OUTPUT);
 
   // set advertised local name and service UUID:
-  blePeripheral.setLocalName("LED");
+  blePeripheral.setLocalName("Remote Lightswitch");
   blePeripheral.setAdvertisedServiceUuid(ledService.uuid());
 
   // add service and characteristic:
@@ -54,7 +54,7 @@ void setup() {
   // begin advertising BLE service:
   blePeripheral.begin();
 
-  Serial.println("BLE LED Peripheral");
+  Serial.println("BLE Remote Lightswitch Peripheral");
 }
 
 void loop() {
@@ -73,7 +73,7 @@ void loop() {
       // use the value to control the LED:
       if (switchCharacteristic.written()) {
         if (switchCharacteristic.value()) {   // any value other than 0 "Turn on light"
-          Serial.println(F("LED off"));
+          Serial.println(F("Lights off"));
           digitalWrite(ledPin, LOW);          // will turn the LED off
           for(pos = 90; pos>=-0; pos-=1)     // goes from 180 degrees to 0 degrees
           {
@@ -86,7 +86,7 @@ void loop() {
             delay(10);                       // waits 15ms for the servo to reach the position
           }
         } else {                              // a 0 value "Turn off light"
-          Serial.println("LED on");
+          Serial.println("Lights on");
           digitalWrite(ledPin, HIGH);         // will turn the LED on
           for(pos = 90; pos <= 190; pos += 1) // goes from 0 degrees to 180 degrees
           {                                  // in steps of 1 degree
